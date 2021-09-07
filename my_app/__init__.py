@@ -2,8 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
-import os
-
+from flask_restful import Api
 
 
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -20,6 +19,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 #api = Api(app, decorators=[csrf.exempt])
+api = Api(app)
 
 
 app.secret_key = 'some_random_key'

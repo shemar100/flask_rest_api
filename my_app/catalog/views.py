@@ -5,8 +5,16 @@ from werkzeug.utils import secure_filename
 from my_app import db, app
 from my_app.catalog.models import Product, Category
 from sqlalchemy.orm.util import join
+from flask_restful import Resource
+from my_app import api
+import json
+from flask import abort
+from flask_restful import reqparse
 
-import os
+parser = reqparse.RequestParser()
+parser.add_argument('name', type=str)
+parser.add_argument('price', type=float)
+parser.add_argument('category', type=dict)
 
 
 
@@ -107,3 +115,27 @@ def categories():
     categories = Category.query.all()
     return render_template('categories.html', categories=categories)
 
+class ProductApi(Resource):
+    def get(self, id=None, page=1):
+        if not id:
+            products = Product.query.paginate(page, 10).items
+        else:
+            products = [Product.query.get(id)]
+        if not products:
+            abort(404)
+        res = {}
+        for product in products:
+            res[product.id] = {
+            'name': product.name,
+            'price': product.price,
+            'category': product.category.name
+        }
+        return json.dumps(res)
+
+
+api.add_resource(
+ProductApi,
+'/api/product',
+'/api/product/<int:id>',
+'/api/product/<int:id>/<int:page>'
+)
