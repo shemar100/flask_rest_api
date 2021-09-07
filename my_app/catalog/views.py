@@ -152,6 +152,28 @@ class ProductApi(Resource):
 
         return json.dumps(res)
 
+
+    def put(self, id):
+        args = parser.parse_args()
+        name = args['name']
+        price = args['price']
+        categ_name = args['category']['name']
+        category = Category.query.filter_by(name=categ_name).first()
+        product = Product.query.filter_by(id=id).update({
+            'name': name,
+            'price': price,
+            'category_id': category.id 
+        })
+        db.session.commit()
+        res = {}
+        res[product.id] = {
+            'name' : product.name,
+            'price': product.price,
+            'category' : product.category.name
+
+        }
+
+
 api.add_resource(
 ProductApi,
 '/api/product',
