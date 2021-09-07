@@ -132,6 +132,25 @@ class ProductApi(Resource):
         }
         return json.dumps(res)
 
+    def post(self):
+        args = parser.parse_args()
+        name = args['name']
+        price = args['price']
+        categ_name = args['category']['name']
+        category = Category.query.filter_by(name=categ_name).first()
+        if not category:
+            category = Category(categ_name)
+        product = Product(name, price, category)
+        db.session.add(product)
+        db.session.commit()
+        res = {}
+        res[product.id] = {
+            'name': product.name,
+            'price': product.price,
+            'category': product.category.name
+        }
+
+        return json.dumps(res)
 
 api.add_resource(
 ProductApi,
