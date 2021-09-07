@@ -173,6 +173,12 @@ class ProductApi(Resource):
 
         }
 
+    def delete(self, id):
+        product = Product.query.filter_by(id=id).delete()
+        product.delete()
+        db.session.commit()
+        return json.dumps({'response': 'Success'})
+
 
 api.add_resource(
 ProductApi,
