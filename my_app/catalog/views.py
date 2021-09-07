@@ -1,7 +1,5 @@
 from flask import request, jsonify, Blueprint, render_template, flash, redirect, abort
-from my_app import ALLOWED_EXTENSIONS
 from flask.helpers import url_for
-from werkzeug.utils import secure_filename
 from my_app import db, app
 from my_app.catalog.models import Product, Category
 from sqlalchemy.orm.util import join
@@ -16,16 +14,9 @@ parser.add_argument('name', type=str)
 parser.add_argument('price', type=float)
 parser.add_argument('category', type=dict)
 
-
-
 #from functools import wraps
 
 catalog = Blueprint('catalog', __name__)
-
-
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.lower().rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 '''
